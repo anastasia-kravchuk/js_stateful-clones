@@ -19,7 +19,14 @@ function transformStateWithClones(state, actions) {
         break;
 
       case 'addProperties':
-        updatedState = { ...currentState, ...action.extraData };
+        const extra =
+          action.extraData &&
+          typeof action.extraData === 'object' &&
+          !Array.isArray(action.extraData)
+            ? action.extraData
+            : {};
+
+        updatedState = { ...currentState, ...extra };
         break;
 
       case 'removeProperties':
