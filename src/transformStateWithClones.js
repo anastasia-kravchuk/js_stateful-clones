@@ -23,11 +23,15 @@ function transformStateWithClones(state, actions) {
         break;
 
       case 'removeProperties':
-        updatedState = {};
+        updatedState = { ...currentState };
 
-        for (const key in currentState) {
-          if (!action.keysToRemove.includes(key)) {
-            updatedState[key] = currentState[key];
+        const keysToRemove = action.keysToRemove;
+
+        if (Array.isArray(keysToRemove)) {
+          for (const key of keysToRemove) {
+            if (Object.prototype.hasOwnProperty.call(updatedState, key)) {
+              delete updatedState[key];
+            }
           }
         }
         break;
@@ -37,7 +41,7 @@ function transformStateWithClones(state, actions) {
     }
 
     currentState = updatedState;
-    stateHistory.push(currentState);
+    stateHistory.push({ ...currentState });
   }
 
   return stateHistory;
